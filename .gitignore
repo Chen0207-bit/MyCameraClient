@@ -1,0 +1,32 @@
+# Qt Creator
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qmake.stash
+
+# Build folders
+build/
+debug/
+release/
+
+# C/C++ artifacts
+*.obj
+*.o
+*.exe
+*.dll
+*.lib
+*.pdb
+*.ilk
+
+# Qt generated files
+ui_*.h
+moc_*.cpp
+moc_*.obj
+qrc_*.cpp
+qrc_*.obj
+
+# IDE/system
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
