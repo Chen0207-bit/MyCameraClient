@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     CameraInterface/CameraContext.cpp \
+    CameraInterface/VirtualCamera.cpp \
     ControlWidget/controlwidget.cpp \
     ParamWidget/paramwidget.cpp \
     ViewWidget/viewwidget.cpp \
@@ -21,6 +22,7 @@ HEADERS += \
     CameraInterface/CameraContext.h \
     CameraInterface/CameraError.h \
     CameraInterface/CameraInterface.h \
+    CameraInterface/VirtualCamera.h \
     ControlWidget/controlwidget.h \
     ParamWidget/paramwidget.h \
     ViewWidget/viewwidget.h \
