@@ -87,6 +87,17 @@ void ControlWidget::refreshConnectButtonState()
     ui->connectButton->setText(state ? "Disconnect" : "Connect");
 }
 
+CameraMetaInfo ControlWidget::currentCameraInfo() const
+{
+    const int currentRow = ui->cameraListWidget->currentRow();
+    if (currentRow < 0 || currentRow >= m_cameraMetaInfos.size())
+    {
+        return {};
+    }
+
+    return m_cameraMetaInfos.at(currentRow);
+}
+
 QString ControlWidget::currentCameraSerial() const
 {
     const int currentRow = ui->cameraListWidget->currentRow();

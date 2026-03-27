@@ -27,6 +27,7 @@ ViewWidget::~ViewWidget()
 void ViewWidget::refreshGrabbingButtonState()
 {
     const QString serial = m_controlWidget ? m_controlWidget->currentCameraSerial() : QString{};
+    //如果 m_controlWidget 存在，就用m_controlWidget->currentCameraSerial()作为 serial否则就给 serial 一个空的 QString
     if (serial.isEmpty())
     {
         ui->grabbingButton->setText("Start Grabbing");
@@ -91,7 +92,7 @@ void ViewWidget::onGrabbingClicked()
         refreshGrabbingButtonState();
         return;
     }
-
+    //停止完会立刻刷新按钮，把文字变回 Start Grabbing。
     ret = CameraContext::Instance()->startGrabbing(serial);
     if (ret != CHONGMING_OK)
     {

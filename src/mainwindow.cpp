@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_controlWidget = new ControlWidget(ui->controlWidgetContainer);
     m_viewWidget = new ViewWidget(m_controlWidget, ui->viewWidgetContainer);
-    m_paramWidget = new ParamWidget(ui->paramWidgetContainer);
+    m_paramWidget = new ParamWidget(m_controlWidget, ui->paramWidgetContainer);
     m_statusLabel = new QLabel("Round 1 Ready", this);
 
     ui->controlWidgetContainer->layout()->addWidget(m_controlWidget);

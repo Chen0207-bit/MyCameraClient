@@ -18,6 +18,7 @@ class ControlWidget : public QWidget
 public:
     explicit ControlWidget(QWidget *parent = nullptr);
     ~ControlWidget();
+    CameraMetaInfo currentCameraInfo() const;
     QString currentCameraSerial() const;
 
 signals:
