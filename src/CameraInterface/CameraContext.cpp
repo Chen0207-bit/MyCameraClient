@@ -52,8 +52,12 @@ uint32_t CameraContext::EnumerationCamera(QVector<CameraMetaInfo>& cameraInfos)
     info.UserDefineID = "VirtualCamera";
     info.Serial = "VIR-0001";
     info.VenderName = "MyCameraClient";
-
+    CameraMetaInfo info2;
+    info2.UserDefineID = "VirtualCamera2";
+    info2.Serial = "VIR-0002";
+    info2.VenderName = "MyCameraClient";
     cameraInfos.push_back(info);//给外部看
+    cameraInfos.push_back(info2);
     //cameraInfos[0]会得到camerametainfo对象
     // struct CameraMetaInfo
     // {
@@ -62,6 +66,7 @@ uint32_t CameraContext::EnumerationCamera(QVector<CameraMetaInfo>& cameraInfos)
     //     QString VenderName;
     // };
     m_serialCamMap.insert(info.Serial, new VirtualCamera(info));//给内部看
+    m_serialCamMap.insert(info.Serial, new VirtualCamera(info2));
     //变量类型：CameraInterface*
     //实际对象：VirtualCamera
     // 堆：
@@ -92,6 +97,18 @@ uint32_t CameraContext::isConnect(const QString& serial, bool& state)
 
     auto* camera = m_serialCamMap.value(serial);
     state = camera->isConnect();
+    return CHONGMING_OK;
+}
+
+uint32_t CameraContext::isGrabbing(const QString& serial, bool& state)
+{
+    if (!m_serialCamMap.contains(serial))
+    {
+        return NOCAMERA_ERROR;
+    }
+
+    auto* camera = m_serialCamMap.value(serial);
+    state = camera->isGrabbing();
     return CHONGMING_OK;
 }
 
@@ -127,4 +144,26 @@ uint32_t CameraContext::disconnect(const QString& serial)
     }
 
     return camera->release();
+}
+
+uint32_t CameraContext::startGrabbing(const QString& serial)
+{
+    if (!m_serialCamMap.contains(serial))
+    {
+        return NOCAMERA_ERROR;
+    }
+
+    auto* camera = m_serialCamMap.value(serial);
+    return camera->startGrabbing();
+}
+
+uint32_t CameraContext::stopGrabbing(const QString& serial)
+{
+    if (!m_serialCamMap.contains(serial))
+    {
+        return NOCAMERA_ERROR;
+    }
+
+    auto* camera = m_serialCamMap.value(serial);
+    return camera->stopGrabbing();
 }

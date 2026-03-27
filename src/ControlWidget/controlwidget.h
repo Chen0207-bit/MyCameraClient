@@ -18,11 +18,14 @@ class ControlWidget : public QWidget
 public:
     explicit ControlWidget(QWidget *parent = nullptr);
     ~ControlWidget();
+    QString currentCameraSerial() const;
+
+signals:
+    void controlStateChanged();
 
 private:
     void refreshCameraList();
     void refreshConnectButtonState();
-    QString currentCameraSerial() const;
 
 private slots:
     void onEnumerateClicked();

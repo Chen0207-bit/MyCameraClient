@@ -15,7 +15,10 @@ ControlWidget::ControlWidget(QWidget *parent)
     connect(ui->connectButton, &QPushButton::clicked,
             this, &ControlWidget::onConnectClicked);
     connect(ui->cameraListWidget, &QListWidget::currentRowChanged,
-            this, [this](int) { refreshConnectButtonState(); });
+            this, [this](int) {
+                refreshConnectButtonState();
+                emit controlStateChanged();
+            });
 
     refreshConnectButtonState();
 }
@@ -58,6 +61,7 @@ void ControlWidget::refreshCameraList()
     }
 
     refreshConnectButtonState();
+    emit controlStateChanged();//提醒    connect(m_controlWidget, &ControlWidget::controlStateChanged,this, &ViewWidget::refreshGrabbingButtonState);
 }
 
 void ControlWidget::refreshConnectButtonState()
@@ -118,6 +122,7 @@ void ControlWidget::onEnumerateClicked()
     ui->statusLabel->setText(
         QString("Found %1 camera(s)").arg(m_cameraMetaInfos.size()));
     //.arg() = 把字符串里的占位符（%1 %2 ...）替换成你传进去的值
+    emit controlStateChanged();
 }
 
 void ControlWidget::onConnectClicked()
@@ -149,6 +154,7 @@ void ControlWidget::onConnectClicked()
 
         ui->statusLabel->setText(QString("Disconnected: %1").arg(serial));
         refreshConnectButtonState();
+        emit controlStateChanged();
         return;
     }
 
@@ -178,4 +184,5 @@ void ControlWidget::onConnectClicked()
 
     ui->statusLabel->setText(QString("Connected: %1").arg(serial));
     refreshConnectButtonState();
+    emit controlStateChanged();
 }

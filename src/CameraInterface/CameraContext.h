@@ -18,8 +18,11 @@ public:
 
     uint32_t EnumerationCamera(QVector<CameraMetaInfo>& cameraInfos);
     uint32_t isConnect(const QString& serial, bool& state);
+    uint32_t isGrabbing(const QString& serial, bool& state);
     uint32_t connect(const QString& serial);
     uint32_t disconnect(const QString& serial);
+    uint32_t startGrabbing(const QString& serial);
+    uint32_t stopGrabbing(const QString& serial);
 
 private:
     CameraContext();
