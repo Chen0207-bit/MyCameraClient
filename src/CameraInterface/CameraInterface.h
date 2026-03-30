@@ -3,6 +3,9 @@
 
 #include "CMCameraMetaInfo.h"
 #include "CameraError.h"
+#include "CameraParam.h"
+
+#include <QVector>
 
 class CameraInterface
 {
@@ -23,6 +26,7 @@ public:
     virtual uint32_t disconnect() = 0;
     virtual uint32_t startGrabbing() = 0;
     virtual uint32_t stopGrabbing() = 0;
+    virtual uint32_t getParamList(QVector<CameraParam>& paramList) = 0;
 
 protected:
     CameraMetaInfo m_cameraInfo;

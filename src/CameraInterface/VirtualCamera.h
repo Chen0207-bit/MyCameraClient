@@ -17,10 +17,12 @@ public:
     uint32_t disconnect() override;
     uint32_t startGrabbing() override;
     uint32_t stopGrabbing() override;
+    uint32_t getParamList(QVector<CameraParam>& paramList) override;
 
 private:
     bool m_isConnected;
     bool m_isGrabbing;
+    QVector<CameraParam> m_cameraParams;
 };
 
 #endif // VIRTUALCAMERA_H

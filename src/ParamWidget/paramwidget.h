@@ -1,6 +1,9 @@
 #ifndef PARAMWIDGET_H
 #define PARAMWIDGET_H
 
+#include "CameraInterface/CameraParam.h"
+
+#include <QVector>
 #include <QWidget>
 
 class ControlWidget;
@@ -17,8 +20,14 @@ public:
     explicit ParamWidget(ControlWidget *controlWidget, QWidget *parent = nullptr);
     ~ParamWidget();
 
-private:
+public slots:
     void refreshInfoPanel();
+
+private slots:
+    void onCurrentParamChanged();
+
+private:
+    void refreshParamList(const QVector<CameraParam>& paramList);
 
 private:
     Ui::ParamWidget *ui;

@@ -66,7 +66,7 @@ uint32_t CameraContext::EnumerationCamera(QVector<CameraMetaInfo>& cameraInfos)
     //     QString VenderName;
     // };
     m_serialCamMap.insert(info.Serial, new VirtualCamera(info));//给内部看
-    m_serialCamMap.insert(info.Serial, new VirtualCamera(info2));
+    m_serialCamMap.insert(info2.Serial, new VirtualCamera(info2));
     //变量类型：CameraInterface*
     //实际对象：VirtualCamera
     // 堆：
@@ -110,6 +110,22 @@ uint32_t CameraContext::isGrabbing(const QString& serial, bool& state)
     auto* camera = m_serialCamMap.value(serial);
     state = camera->isGrabbing();
     return CHONGMING_OK;
+}
+
+uint32_t CameraContext::getParamList(const QString& serial, QVector<CameraParam>& paramList)
+{
+    if (!m_serialCamMap.contains(serial))
+    {
+        return NOCAMERA_ERROR;
+    }
+
+    auto* camera = m_serialCamMap.value(serial);
+    if (!camera->isConnect())
+    {
+        return CAMERA_NOT_CONNECTED;
+    }
+
+    return camera->getParamList(paramList);
 }
 
 uint32_t CameraContext::connect(const QString& serial)

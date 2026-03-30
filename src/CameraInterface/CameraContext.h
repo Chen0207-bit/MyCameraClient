@@ -7,6 +7,7 @@
 
 #include "CMCameraMetaInfo.h"
 #include "CameraError.h"
+#include "CameraParam.h"
 
 class CameraInterface;
 
@@ -19,6 +20,7 @@ public:
     uint32_t EnumerationCamera(QVector<CameraMetaInfo>& cameraInfos);
     uint32_t isConnect(const QString& serial, bool& state);
     uint32_t isGrabbing(const QString& serial, bool& state);
+    uint32_t getParamList(const QString& serial, QVector<CameraParam>& paramList);
     uint32_t connect(const QString& serial);
     uint32_t disconnect(const QString& serial);
     uint32_t startGrabbing(const QString& serial);

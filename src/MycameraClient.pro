@@ -22,6 +22,7 @@ HEADERS += \
     CameraInterface/CameraContext.h \
     CameraInterface/CameraError.h \
     CameraInterface/CameraInterface.h \
+    CameraInterface/CameraParam.h \
     CameraInterface/VirtualCamera.h \
     ControlWidget/controlwidget.h \
     ParamWidget/paramwidget.h \

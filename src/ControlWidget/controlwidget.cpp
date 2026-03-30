@@ -4,6 +4,8 @@
 #include "CameraInterface/CMCameraMetaInfo.h"
 #include "CameraInterface/CameraContext.h"
 
+#include <QSignalBlocker>
+
 ControlWidget::ControlWidget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ControlWidget)
@@ -30,6 +32,7 @@ ControlWidget::~ControlWidget()
 
 void ControlWidget::refreshCameraList()
 {
+    const QSignalBlocker blocker(ui->cameraListWidget);
     ui->cameraListWidget->clear();
 
     for (const auto& cameraInfo : m_cameraMetaInfos)
@@ -61,7 +64,6 @@ void ControlWidget::refreshCameraList()
     }
 
     refreshConnectButtonState();
-    emit controlStateChanged();//提醒    connect(m_controlWidget, &ControlWidget::controlStateChanged,this, &ViewWidget::refreshGrabbingButtonState);
 }
 
 void ControlWidget::refreshConnectButtonState()

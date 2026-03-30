@@ -90,6 +90,7 @@ void ViewWidget::onGrabbingClicked()
 
         ui->statusLabel->setText(QString("Stopped grabbing: %1").arg(serial));
         refreshGrabbingButtonState();
+        emit viewStateChanged();
         return;
     }
     //停止完会立刻刷新按钮，把文字变回 Start Grabbing。
@@ -102,4 +103,5 @@ void ViewWidget::onGrabbingClicked()
 
     ui->statusLabel->setText(QString("Grabbing started: %1").arg(serial));
     refreshGrabbingButtonState();
+    emit viewStateChanged();
 }

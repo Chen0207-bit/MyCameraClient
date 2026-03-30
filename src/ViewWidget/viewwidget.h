@@ -17,6 +17,9 @@ public:
     explicit ViewWidget(ControlWidget *controlWidget, QWidget *parent = nullptr);
     ~ViewWidget();
 
+signals:
+    void viewStateChanged();
+
 private:
     void refreshGrabbingButtonState();
 
