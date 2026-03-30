@@ -2,6 +2,7 @@
 #define CONTROLWIDGET_H
 
 #include "CameraInterface/CMCameraMetaInfo.h"
+#include "Listener.h"
 
 #include <QString>
 #include <QVector>
@@ -11,7 +12,7 @@ namespace Ui {
 class ControlWidget;
 }
 
-class ControlWidget : public QWidget
+class ControlWidget : public QWidget, public Listener
 {
     Q_OBJECT
 
@@ -20,9 +21,7 @@ public:
     ~ControlWidget();
     CameraMetaInfo currentCameraInfo() const;
     QString currentCameraSerial() const;
-
-signals:
-    void controlStateChanged();
+    void RespondMessage(int message) override;
 
 private:
     void refreshCameraList();

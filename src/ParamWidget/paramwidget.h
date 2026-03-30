@@ -2,6 +2,7 @@
 #define PARAMWIDGET_H
 
 #include "CameraInterface/CameraParam.h"
+#include "Listener.h"
 
 #include <QVector>
 #include <QWidget>
@@ -12,13 +13,14 @@ namespace Ui {
 class ParamWidget;
 }
 
-class ParamWidget : public QWidget
+class ParamWidget : public QWidget, public Listener
 {
     Q_OBJECT
 
 public:
     explicit ParamWidget(ControlWidget *controlWidget, QWidget *parent = nullptr);
     ~ParamWidget();
+    void RespondMessage(int message) override;
 
 public slots:
     void refreshInfoPanel();

@@ -19,7 +19,7 @@ ControlWidget::ControlWidget(QWidget *parent)
     connect(ui->cameraListWidget, &QListWidget::currentRowChanged,
             this, [this](int) {
                 refreshConnectButtonState();
-                emit controlStateChanged();
+                ListenerManager::Instance()->notify(MESSAGE::CAMERA_SWITCH);
             });
 
     refreshConnectButtonState();
@@ -27,6 +27,7 @@ ControlWidget::ControlWidget(QWidget *parent)
 
 ControlWidget::~ControlWidget()
 {
+    ListenerManager::Instance()->unregisterListener(this);
     delete ui;
 }
 
@@ -114,6 +115,10 @@ QString ControlWidget::currentCameraSerial() const
     //等价m_cameraMetaInfos[row] 得到CameraMetaInfo 对象 有三个参数，get到serial
 }
 
+void ControlWidget::RespondMessage(int)
+{
+}
+
 void ControlWidget::onEnumerateClicked()
 {
     m_cameraMetaInfos.clear();
@@ -135,7 +140,7 @@ void ControlWidget::onEnumerateClicked()
     ui->statusLabel->setText(
         QString("Found %1 camera(s)").arg(m_cameraMetaInfos.size()));
     //.arg() = 把字符串里的占位符（%1 %2 ...）替换成你传进去的值
-    emit controlStateChanged();
+    ListenerManager::Instance()->notify(MESSAGE::CAMERA_ENUMERATION);
 }
 
 void ControlWidget::onConnectClicked()
@@ -167,7 +172,7 @@ void ControlWidget::onConnectClicked()
 
         ui->statusLabel->setText(QString("Disconnected: %1").arg(serial));
         refreshConnectButtonState();
-        emit controlStateChanged();
+        ListenerManager::Instance()->notify(MESSAGE::CAMERA_DISCONNECT);
         return;
     }
 
@@ -197,5 +202,5 @@ void ControlWidget::onConnectClicked()
 
     ui->statusLabel->setText(QString("Connected: %1").arg(serial));
     refreshConnectButtonState();
-    emit controlStateChanged();
+    ListenerManager::Instance()->notify(MESSAGE::CAMERA_CONNECT);
 }

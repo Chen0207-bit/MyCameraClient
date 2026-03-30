@@ -1,6 +1,8 @@
 #ifndef VIEWWIDGET_H
 #define VIEWWIDGET_H
 
+#include "Listener.h"
+
 #include <QImage>
 #include <QWidget>
 
@@ -11,16 +13,14 @@ namespace Ui {
 class ViewWidget;
 }
 
-class ViewWidget : public QWidget
+class ViewWidget : public QWidget, public Listener
 {
     Q_OBJECT
 
 public:
     explicit ViewWidget(ControlWidget *controlWidget, QWidget *parent = nullptr);
     ~ViewWidget();
-
-signals:
-    void viewStateChanged();
+    void RespondMessage(int message) override;
 
 private:
     void refreshGrabbingButtonState();

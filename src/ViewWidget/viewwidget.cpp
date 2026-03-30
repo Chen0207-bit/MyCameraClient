@@ -15,10 +15,16 @@ ViewWidget::ViewWidget(ControlWidget *controlWidget, QWidget *parent)
 {
     ui->setupUi(this);
 
+    ListenerManager::Instance()->registerMessage(
+        MESSAGE::CAMERA_ENUMERATION |
+        MESSAGE::CAMERA_SWITCH |
+        MESSAGE::CAMERA_CONNECT |
+        MESSAGE::CAMERA_DISCONNECT |
+        MESSAGE::CAMERA_STARTGRAB |
+        MESSAGE::CAMERA_STOPGRAB,
+        this);
     connect(ui->grabbingButton, &QPushButton::clicked,
             this, &ViewWidget::onGrabbingClicked);
-    connect(m_controlWidget, &ControlWidget::controlStateChanged,
-            this, &ViewWidget::refreshGrabbingButtonState);
     connect(m_acquireImageProcess, &AcquireImageProcess::imageReady,
             this, &ViewWidget::onImageReady);
 
@@ -27,8 +33,23 @@ ViewWidget::ViewWidget(ControlWidget *controlWidget, QWidget *parent)
 
 ViewWidget::~ViewWidget()
 {
+    ListenerManager::Instance()->unregisterListener(this);
     stopAcquireProcess();
     delete ui;
+}
+
+void ViewWidget::RespondMessage(int)
+{
+    refreshGrabbingButtonState();
+
+    bool isGrabbing = false;
+    const QString serial = m_controlWidget ? m_controlWidget->currentCameraSerial() : QString{};
+    const auto ret = CameraContext::Instance()->isGrabbing(serial, isGrabbing);
+    if (serial.isEmpty() || ret != CHONGMING_OK || !isGrabbing)
+    {
+        ui->imageLabel->setPixmap(QPixmap());
+        ui->imageLabel->setText("Round 2 Preview Area\n\nClick Start Grabbing to preview the current camera.");
+    }
 }
 
 void ViewWidget::refreshGrabbingButtonState()
@@ -105,7 +126,7 @@ void ViewWidget::onGrabbingClicked()
         ui->statusLabel->setText(QString("Stopped grabbing: %1").arg(serial));
         stopAcquireProcess();
         refreshGrabbingButtonState();
-        emit viewStateChanged();
+        ListenerManager::Instance()->notify(MESSAGE::CAMERA_STOPGRAB);
         return;
     }
     //停止完会立刻刷新按钮，把文字变回 Start Grabbing。
@@ -123,7 +144,7 @@ void ViewWidget::onGrabbingClicked()
         m_acquireImageProcess->start();
     }
     refreshGrabbingButtonState();
-    emit viewStateChanged();
+    ListenerManager::Instance()->notify(MESSAGE::CAMERA_STARTGRAB);
 }
 
 void ViewWidget::onImageReady(const QImage& image)

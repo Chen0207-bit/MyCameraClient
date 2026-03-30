@@ -12,6 +12,7 @@ SOURCES += \
     CameraInterface/CameraContext.cpp \
     CameraInterface/VirtualCamera.cpp \
     ControlWidget/controlwidget.cpp \
+    Listener.cpp \
     ParamWidget/paramwidget.cpp \
     ViewWidget/AcquireImageProcess.cpp \
     ViewWidget/viewwidget.cpp \
@@ -26,6 +27,7 @@ HEADERS += \
     CameraInterface/CameraParam.h \
     CameraInterface/VirtualCamera.h \
     ControlWidget/controlwidget.h \
+    Listener.h \
     ParamWidget/paramwidget.h \
     ViewWidget/AcquireImageProcess.h \
     ViewWidget/viewwidget.h \

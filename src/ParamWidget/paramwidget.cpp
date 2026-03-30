@@ -18,8 +18,14 @@ ParamWidget::ParamWidget(ControlWidget *controlWidget, QWidget *parent)
 {
     ui->setupUi(this);
 
-    connect(m_controlWidget, &ControlWidget::controlStateChanged,
-            this, &ParamWidget::refreshInfoPanel);
+    ListenerManager::Instance()->registerMessage(
+        MESSAGE::CAMERA_ENUMERATION |
+        MESSAGE::CAMERA_SWITCH |
+        MESSAGE::CAMERA_CONNECT |
+        MESSAGE::CAMERA_DISCONNECT |
+        MESSAGE::CAMERA_STARTGRAB |
+        MESSAGE::CAMERA_STOPGRAB,
+        this);
     connect(ui->paramListWidget, &QListWidget::currentItemChanged,
             this, [this](QListWidgetItem*, QListWidgetItem*) {
                 onCurrentParamChanged();
@@ -30,7 +36,13 @@ ParamWidget::ParamWidget(ControlWidget *controlWidget, QWidget *parent)
 
 ParamWidget::~ParamWidget()
 {
+    ListenerManager::Instance()->unregisterListener(this);
     delete ui;
+}
+
+void ParamWidget::RespondMessage(int)
+{
+    refreshInfoPanel();
 }
 
 void ParamWidget::refreshInfoPanel()

@@ -21,13 +21,11 @@ MainWindow::MainWindow(QWidget *parent)
     m_controlWidget = new ControlWidget(ui->controlWidgetContainer);
     m_viewWidget = new ViewWidget(m_controlWidget, ui->viewWidgetContainer);
     m_paramWidget = new ParamWidget(m_controlWidget, ui->paramWidgetContainer);
-    m_statusLabel = new QLabel("Phase 1 Ready", this);
+    m_statusLabel = new QLabel("Phase 3 Ready", this);
 
     ui->controlWidgetContainer->layout()->addWidget(m_controlWidget);
     ui->viewWidgetContainer->layout()->addWidget(m_viewWidget);
     ui->paramWidgetContainer->layout()->addWidget(m_paramWidget);
-    connect(m_viewWidget, &ViewWidget::viewStateChanged,
-            m_paramWidget, &ParamWidget::refreshInfoPanel);
     ui->horizontalLayout->setStretch(0, 3);
     ui->horizontalLayout->setStretch(1, 5);
     ui->horizontalLayout->setStretch(2, 3);
