@@ -124,7 +124,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="placeholderLabel">
+       <widget class="QLabel" name="imageLabel">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -135,12 +135,15 @@
          <enum>QFrame::Shape::Box</enum>
         </property>
         <property name="text">
-         <string>Round 5 Placeholder
+         <string>Round 2 Preview Area
 
-Future image preview area</string>
+Enumerate and connect a camera first.</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+        <property name="scaledContents">
+         <bool>false</bool>
         </property>
        </widget>
       </item>

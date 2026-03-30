@@ -3,11 +3,15 @@
 
 #include "CameraInterface/CameraContext.h"
 #include "ControlWidget/controlwidget.h"
+#include "AcquireImageProcess.h"
+
+#include <QPixmap>
 
 ViewWidget::ViewWidget(ControlWidget *controlWidget, QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ViewWidget)
     , m_controlWidget(controlWidget)
+    , m_acquireImageProcess(new AcquireImageProcess(this))
 {
     ui->setupUi(this);
 
@@ -15,12 +19,15 @@ ViewWidget::ViewWidget(ControlWidget *controlWidget, QWidget *parent)
             this, &ViewWidget::onGrabbingClicked);
     connect(m_controlWidget, &ControlWidget::controlStateChanged,
             this, &ViewWidget::refreshGrabbingButtonState);
+    connect(m_acquireImageProcess, &AcquireImageProcess::imageReady,
+            this, &ViewWidget::onImageReady);
 
     refreshGrabbingButtonState();
 }
 
 ViewWidget::~ViewWidget()
 {
+    stopAcquireProcess();
     delete ui;
 }
 
@@ -30,9 +37,12 @@ void ViewWidget::refreshGrabbingButtonState()
     //如果 m_controlWidget 存在，就用m_controlWidget->currentCameraSerial()作为 serial否则就给 serial 一个空的 QString
     if (serial.isEmpty())
     {
+        stopAcquireProcess();
         ui->grabbingButton->setText("Start Grabbing");
         ui->grabbingButton->setEnabled(false);
         ui->cameraLabel->setText("Current Camera: None");
+        ui->imageLabel->setText("Round 2 Preview Area\n\nEnumerate and connect a camera first.");
+        ui->imageLabel->setPixmap(QPixmap());
         return;
     }
 
@@ -48,6 +58,10 @@ void ViewWidget::refreshGrabbingButtonState()
     }
 
     ui->grabbingButton->setText(isGrabbing ? "Stop Grabbing" : "Start Grabbing");
+    if (!isGrabbing)
+    {
+        stopAcquireProcess();
+    }
 }
 
 void ViewWidget::onGrabbingClicked()
@@ -89,6 +103,7 @@ void ViewWidget::onGrabbingClicked()
         }
 
         ui->statusLabel->setText(QString("Stopped grabbing: %1").arg(serial));
+        stopAcquireProcess();
         refreshGrabbingButtonState();
         emit viewStateChanged();
         return;
@@ -102,6 +117,34 @@ void ViewWidget::onGrabbingClicked()
     }
 
     ui->statusLabel->setText(QString("Grabbing started: %1").arg(serial));
+    m_acquireImageProcess->setSerial(serial);
+    if (!m_acquireImageProcess->isRunning())
+    {
+        m_acquireImageProcess->start();
+    }
     refreshGrabbingButtonState();
     emit viewStateChanged();
+}
+
+void ViewWidget::onImageReady(const QImage& image)
+{
+    if (image.isNull())
+    {
+        return;
+    }
+
+    const QPixmap pixmap = QPixmap::fromImage(image);
+    ui->imageLabel->setPixmap(
+        pixmap.scaled(ui->imageLabel->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+}
+
+void ViewWidget::stopAcquireProcess()
+{
+    if (m_acquireImageProcess == nullptr || !m_acquireImageProcess->isRunning())
+    {
+        return;
+    }
+
+    m_acquireImageProcess->stop();
+    m_acquireImageProcess->wait();
 }

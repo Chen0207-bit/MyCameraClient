@@ -13,6 +13,7 @@ SOURCES += \
     CameraInterface/VirtualCamera.cpp \
     ControlWidget/controlwidget.cpp \
     ParamWidget/paramwidget.cpp \
+    ViewWidget/AcquireImageProcess.cpp \
     ViewWidget/viewwidget.cpp \
     main.cpp \
     mainwindow.cpp
@@ -26,6 +27,7 @@ HEADERS += \
     CameraInterface/VirtualCamera.h \
     ControlWidget/controlwidget.h \
     ParamWidget/paramwidget.h \
+    ViewWidget/AcquireImageProcess.h \
     ViewWidget/viewwidget.h \
     mainwindow.h
 
