@@ -22,6 +22,7 @@ public:
     uint32_t isConnect(const QString& serial, bool& state);
     uint32_t isGrabbing(const QString& serial, bool& state);
     uint32_t getParamList(const QString& serial, QVector<CameraParam>& paramList);
+    uint32_t writeParam(const QString& serial, const CameraParam& param);
     uint32_t getImage(const QString& serial, QImage& image);
     uint32_t connect(const QString& serial);
     uint32_t disconnect(const QString& serial);

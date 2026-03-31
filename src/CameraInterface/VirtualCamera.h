@@ -18,6 +18,7 @@ public:
     uint32_t startGrabbing() override;
     uint32_t stopGrabbing() override;
     uint32_t getParamList(QVector<CameraParam>& paramList) override;
+    uint32_t writeParam(const CameraParam& param) override;
     uint32_t getImage(QImage& image) override;
 
 private:

@@ -128,6 +128,22 @@ uint32_t CameraContext::getParamList(const QString& serial, QVector<CameraParam>
     return camera->getParamList(paramList);
 }
 
+uint32_t CameraContext::writeParam(const QString& serial, const CameraParam& param)
+{
+    if (!m_serialCamMap.contains(serial))
+    {
+        return NOCAMERA_ERROR;
+    }
+
+    auto* camera = m_serialCamMap.value(serial);
+    if (!camera->isConnect())
+    {
+        return CAMERA_NOT_CONNECTED;
+    }
+
+    return camera->writeParam(param);
+}
+
 uint32_t CameraContext::getImage(const QString& serial, QImage& image)
 {
     if (!m_serialCamMap.contains(serial))

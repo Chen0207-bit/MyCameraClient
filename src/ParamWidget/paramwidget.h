@@ -4,9 +4,12 @@
 #include "CameraInterface/CameraParam.h"
 #include "Listener.h"
 
+#include <QItemSelection>
 #include <QVector>
 #include <QWidget>
 
+class CameraParamDelegate;
+class CameraParamModel;
 class ControlWidget;
 
 namespace Ui {
@@ -24,16 +27,21 @@ public:
 
 public slots:
     void refreshInfoPanel();
+    void onSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected);
 
 private slots:
-    void onCurrentParamChanged();
+    void onRefreshClicked();
+    void writeCameraParam(const QModelIndex& index);
 
 private:
-    void refreshParamList(const QVector<CameraParam>& paramList);
+    void refreshParamTree(const QVector<CameraParam>& paramList);
+    void clearParamWidget();
 
 private:
     Ui::ParamWidget *ui;
     ControlWidget *m_controlWidget;
+    CameraParamModel *m_paramModel;
+    CameraParamDelegate *m_paramDelegate;
 };
 
 #endif // PARAMWIDGET_H

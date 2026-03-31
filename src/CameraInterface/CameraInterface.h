@@ -28,6 +28,7 @@ public:
     virtual uint32_t startGrabbing() = 0;
     virtual uint32_t stopGrabbing() = 0;
     virtual uint32_t getParamList(QVector<CameraParam>& paramList) = 0;
+    virtual uint32_t writeParam(const CameraParam& param) = 0;
     virtual uint32_t getImage(QImage& image) = 0;
 
 protected:
