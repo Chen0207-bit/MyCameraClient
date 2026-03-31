@@ -82,7 +82,7 @@ QVariant CameraParamModel::data(const QModelIndex& index, int role) const
     {
         return item->data(index.column());
     }
-
+    //widgetui把item显示
     if (role == Qt::UserRole && item->hasCameraParam())
     {
         return QVariant::fromValue(item->cameraParam());
@@ -184,7 +184,7 @@ void CameraParamModel::addCameraParam(const CameraParam& param)
     auto* childItem = new CameraParamItem(itemData, groupItem);
     childItem->setCameraParam(param);
     groupItem->appendChild(childItem);
-
+    //挂节点 创建树结构
     endInsertRows();
 }
 

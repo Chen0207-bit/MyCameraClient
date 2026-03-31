@@ -28,12 +28,13 @@ private:
 
 private slots:
     void onGrabbingClicked();
-    void onImageReady(const QImage& image);
+    void onImageReady(const QString& serial, const QImage& image);
 
 private:
     Ui::ViewWidget *ui;
     ControlWidget *m_controlWidget;
     AcquireImageProcess *m_acquireImageProcess;
+    QString m_previewSerial;
 };
 
 #endif // VIEWWIDGET_H

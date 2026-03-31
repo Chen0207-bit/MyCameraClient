@@ -7,5 +7,6 @@ constexpr uint32_t CHONGMING_OK = 0;
 constexpr uint32_t NOCAMERA_ERROR = 1;
 constexpr uint32_t CAMERA_NOT_CONNECTED = 2;
 constexpr uint32_t GETIMAGE_TIMEOUT = 3;
+constexpr uint32_t SDK_NOT_AVAILABLE = 4;
 
 #endif // CAMERAERROR_H

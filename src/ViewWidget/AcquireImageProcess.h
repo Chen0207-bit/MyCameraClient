@@ -2,8 +2,11 @@
 #define ACQUIREIMAGEPROCESS_H
 
 #include <QImage>
+#include <QMutex>
 #include <QString>
 #include <QThread>
+
+#include <atomic>
 
 class AcquireImageProcess : public QThread
 {
@@ -16,14 +19,18 @@ public:
     void stop();
 
 signals:
-    void imageReady(const QImage& image);
+    void imageReady(const QString& serial, const QImage& image);
 
 protected:
     void run() override;
 
 private:
+    QString snapshotSerial();
+
+private:
     QString m_serial;
-    bool m_running;
+    mutable QMutex m_mutex;
+    std::atomic_bool m_running;
 };
 
 #endif // ACQUIREIMAGEPROCESS_H

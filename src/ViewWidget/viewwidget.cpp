@@ -1,9 +1,9 @@
 #include "viewwidget.h"
 #include "ui_viewwidget.h"
 
+#include "AcquireImageProcess.h"
 #include "CameraInterface/CameraContext.h"
 #include "ControlWidget/controlwidget.h"
-#include "AcquireImageProcess.h"
 
 #include <QPixmap>
 
@@ -12,6 +12,7 @@ ViewWidget::ViewWidget(ControlWidget *controlWidget, QWidget *parent)
     , ui(new Ui::ViewWidget)
     , m_controlWidget(controlWidget)
     , m_acquireImageProcess(new AcquireImageProcess(this))
+    , m_previewSerial()
 {
     ui->setupUi(this);
 
@@ -47,6 +48,7 @@ void ViewWidget::RespondMessage(int)
     const auto ret = CameraContext::Instance()->isGrabbing(serial, isGrabbing);
     if (serial.isEmpty() || ret != CHONGMING_OK || !isGrabbing)
     {
+        m_previewSerial.clear();
         ui->imageLabel->setPixmap(QPixmap());
         ui->imageLabel->setText("Round 2 Preview Area\n\nClick Start Grabbing to preview the current camera.");
     }
@@ -55,7 +57,6 @@ void ViewWidget::RespondMessage(int)
 void ViewWidget::refreshGrabbingButtonState()
 {
     const QString serial = m_controlWidget ? m_controlWidget->currentCameraSerial() : QString{};
-    //如果 m_controlWidget 存在，就用m_controlWidget->currentCameraSerial()作为 serial否则就给 serial 一个空的 QString
     if (serial.isEmpty())
     {
         stopAcquireProcess();
@@ -88,14 +89,13 @@ void ViewWidget::refreshGrabbingButtonState()
 void ViewWidget::onGrabbingClicked()
 {
     const QString serial = m_controlWidget ? m_controlWidget->currentCameraSerial() : QString{};
-    //如果没选中相机，直接报错并刷新
     if (serial.isEmpty())
     {
         ui->statusLabel->setText("Please enumerate and connect a camera first");
         refreshGrabbingButtonState();
         return;
     }
-    //先检查这台相机有没有连接
+
     bool isConnected = false;
     auto ret = CameraContext::Instance()->isConnect(serial, isConnected);
     if (ret != CHONGMING_OK || !isConnected)
@@ -104,7 +104,7 @@ void ViewWidget::onGrabbingClicked()
         refreshGrabbingButtonState();
         return;
     }
-    //再检查当前是否已经在采集
+
     bool isGrabbing = false;
     ret = CameraContext::Instance()->isGrabbing(serial, isGrabbing);
     if (ret != CHONGMING_OK)
@@ -129,7 +129,7 @@ void ViewWidget::onGrabbingClicked()
         ListenerManager::Instance()->notify(MESSAGE::CAMERA_STOPGRAB);
         return;
     }
-    //停止完会立刻刷新按钮，把文字变回 Start Grabbing。
+
     ret = CameraContext::Instance()->startGrabbing(serial);
     if (ret != CHONGMING_OK)
     {
@@ -139,6 +139,7 @@ void ViewWidget::onGrabbingClicked()
 
     ui->statusLabel->setText(QString("Grabbing started: %1").arg(serial));
     m_acquireImageProcess->setSerial(serial);
+    m_previewSerial = serial;
     if (!m_acquireImageProcess->isRunning())
     {
         m_acquireImageProcess->start();
@@ -147,9 +148,14 @@ void ViewWidget::onGrabbingClicked()
     ListenerManager::Instance()->notify(MESSAGE::CAMERA_STARTGRAB);
 }
 
-void ViewWidget::onImageReady(const QImage& image)
+void ViewWidget::onImageReady(const QString& serial, const QImage& image)
 {
     if (image.isNull())
+    {
+        return;
+    }
+
+    if (serial != m_previewSerial)
     {
         return;
     }
@@ -168,4 +174,5 @@ void ViewWidget::stopAcquireProcess()
 
     m_acquireImageProcess->stop();
     m_acquireImageProcess->wait();
+    m_previewSerial.clear();
 }

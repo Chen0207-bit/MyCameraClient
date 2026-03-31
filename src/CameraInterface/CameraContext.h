@@ -32,6 +32,8 @@ public:
 private:
     CameraContext();
     ~CameraContext();
+    CameraInterface* createCamera(const CameraMetaInfo& info);
+    void appendVirtualCameras(QVector<CameraMetaInfo>& cameraInfos);
 
 private:
     static CameraContext* m_pContext;

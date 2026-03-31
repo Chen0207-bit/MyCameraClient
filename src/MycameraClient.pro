@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     CameraInterface/CameraContext.cpp \
+    CameraInterface/HikCamera.cpp \
     CameraInterface/VirtualCamera.cpp \
     ControlWidget/controlwidget.cpp \
     Listener.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     CameraInterface/CameraError.h \
     CameraInterface/CameraInterface.h \
     CameraInterface/CameraParam.h \
+    CameraInterface/HikCamera.h \
     CameraInterface/VirtualCamera.h \
     ControlWidget/controlwidget.h \
     Listener.h \
